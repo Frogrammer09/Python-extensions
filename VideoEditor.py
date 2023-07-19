@@ -3,7 +3,17 @@ from PIL import Image
 import numpy as np
 import cv2
 
-density = ' _.,-=+:;cba!?0123456789$W#@Ñ'
+modo=input("Quieres que se vea pixelado o con caracteres? P/C ")
+while modo not in ["P","C"]:
+    modo=input("Quieres que se vea pixelado o con caracteres? P/C ")
+if modo == "C":
+    text=input("Pon el caracter ")
+    while len(text)!=1 or not text.isalpha():
+        text=input("Error. Pon el caracter  ")
+col=input("Quieres que sea a color? S/N ")
+while col not in ["S","N"]:
+    col=input("Error. Quieres que sea a color? S/N ")
+
 camera = cv2.VideoCapture(0)
 
 
@@ -57,17 +67,25 @@ while running:
             r=int(resized_array[row][pixel][0])
             g=int(resized_array[row][pixel][1])
             b=int(resized_array[row][pixel][2])
-            color = ((r + g + b) // 3)
-            color = (color*len(density))// 255
-                text = density[color]
             font = pygame.font.Font(pygame.font.get_default_font(), 8)
-            text_surface = font.render(text, True, (255,255,255))
-            window.blit(text_surface, (x * 8, y * 8))
+            if col=="S":
+                color=(b,g,r)
+            else:
+                color = ((r + g + b) // 3)
+                color=(color,color,color)
+            if modo == "P":
+                pygame.draw.rect(surface, color, (x, y, 1, 1))
+            else:
+                text_surface = font.render(text, True, color)
+                window.blit(text_surface, (x * 8, y * 8))
             i+=1
             pixel+=1
         row+=1
     # Actualizar la ventana
+    if modo == "P":
+        pygame.transform.scale(surface, window_size, window)
     pygame.display.update()
+
 
 # Salir del programa
 camera.release()
