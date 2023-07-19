@@ -4,11 +4,6 @@ import numpy as np
 import cv2
 
 density = ' _.,-=+:;cba!?0123456789$W#@Ñ'
-invDensity = 'Ñ@#W$9876543210?!cba;:+=-,._ '
-
-mode = input("Modo oscuro o claro? (O/C)")
-while mode not in ["O","C"]:
-    mode = input("Error. Modo oscuro o claro? (O/C)")
 camera = cv2.VideoCapture(0)
 
 
@@ -64,10 +59,7 @@ while running:
             b=int(resized_array[row][pixel][2])
             color = ((r + g + b) // 3)
             color = (color*len(density))// 255
-            if mode == "O":
                 text = density[color]
-            else:
-                text = invDensity[color]
             font = pygame.font.Font(pygame.font.get_default_font(), 8)
             text_surface = font.render(text, True, (255,255,255))
             window.blit(text_surface, (x * 8, y * 8))
